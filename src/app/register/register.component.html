@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="col-xs-6 col-xs-offset-3">
+    <div class="row">
+      <h1>Register</h1>
+      <form #registerForm="ngForm"
+            (ngSubmit)="onRegister()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text"
+                 class="form-control"
+                 id="username"
+                 placeholder="enter username:"
+                 [(ngModel)]="user.username"
+                 #username="ngModel"
+                 name="username"
+                 required>
+          <span class="help-block"
+                *ngIf="!username.valid && (username.touched || submitted)">Please enter a valid username!</span>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password"
+                 class="form-control"
+                 id="password"
+                 placeholder="enter password"
+                 [(ngModel)]="user.password"
+                 name="password"
+                 #password="ngModel"
+                 required>
+          <span class="help-block"
+                *ngIf="!password.valid && password.touched">Please enter a valid password!</span>
+          <span class="help-block"
+                *ngIf="!password.valid"></span>
+        </div>
+        <div class="form-group">
+          <re-captcha size="invisible"
+                      (captchaResponse)="onCaptchaResponse()"
+                      site_key="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></re-captcha>
+        </div>
+        <button [disabled]="!registerForm.form.valid"
+                type="submit"
+                class="btn btn-default">Submit</button>
+        <span *ngIf="userAlreadyExists" class="help-block">User Already exists</span>
+        <span *ngIf="fatalError" class="help-block">Fatal error</span>
+      </form>
+    </div>
+  </div>
+</div>
