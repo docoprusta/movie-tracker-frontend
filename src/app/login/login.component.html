@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="col-xs-6 col-xs-offset-3">
+    <div class="row">
+      <h1>Login</h1>
+      <form #loginForm="ngForm"
+            (ngSubmit)="onLogin()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text"
+                 class="form-control"
+                 id="username"
+                 placeholder="enter username:"
+                 [(ngModel)]="user.username"
+                 #username="ngModel"
+                 name="username"
+                 (focus)="onUsernameInputFocus()"
+                 required>
+          <span class="help-block"
+                *ngIf="!username.valid && username.touched">Please enter a valid username!</span>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password"
+                 class="form-control"
+                 id="password"
+                 placeholder="enter password"
+                 [(ngModel)]="user.password"
+                 name="password"
+                 (focus)="onPasswordInputFocus()"
+                 #password="ngModel"
+                 required>
+          <span class="help-block"
+                *ngIf="!password.valid && password.touched">Please enter a valid password!</span>
+          <span class="help-block"
+                *ngIf="!password.valid"></span>
+        </div>
+        <div class="form-group">
+          <re-captcha size="invisible"
+                      (captchaResponse)="onCaptchaResponse()"
+                      site_key="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></re-captcha>
+        </div>
+        <button [disabled]="!loginForm.form.valid"
+                id="submitButton"
+                type="submit"
+                class="btn btn-default">Submit</button>
+        <span *ngIf="authError"
+              class="help-block">Invalid username or password</span>
+        <span *ngIf="fatalError"
+              class="help-block">Fatal error</span>
+      </form>
+    </div>
+  </div>
+</div>
