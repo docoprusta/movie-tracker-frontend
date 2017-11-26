@@ -1,0 +1,47 @@
+<div class="col-xs-12">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <a routerLink="/"
+                   class="navbar-brand">Movie Tracker</a>
+            </div>
+
+            <ul *ngIf="!authService.getLoggedIn()"
+                class="nav navbar-nav">
+                <li>
+                    <a routerLink="/login">Login</a>
+                </li>
+                <li>
+                    <a routerLink="/register">Register</a>
+                </li>
+            </ul>
+
+            <ul *ngIf="authService.getLoggedIn()"
+                class="nav navbar-nav navbar-right">
+                <li>
+                    <a routerLink="/videos"></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#"
+                       class="dropdown-toggle"
+                       data-toggle="dropdown"
+                       role="button">Hello {{authService.getLoggedInUserName()}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a (click)="logoutClicked()"
+                               role="button">Logout</a>
+                        </li>
+                        <li>
+                            <a (click)="deleteClicked()"
+                               role="button">Delete account</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</div>
