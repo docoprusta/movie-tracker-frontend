@@ -12,10 +12,13 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthService } from './services/auth.service';
+import { VideosComponent } from './videos/videos.component';
+import { VideoService } from './services/video.service';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
+  { path: 'videos', component: VideosComponent, canActivate: [AuthService]},
   { path: '', component: HomepageComponent},
   { path: '**', component: NotFoundComponent}
 ]
@@ -29,6 +32,7 @@ const appRoutes: Routes = [
     NavbarComponent,
     HomepageComponent,
     NotFoundComponent,
+    VideosComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +41,7 @@ const appRoutes: Routes = [
     ReCaptchaModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [AuthService],
+  providers: [AuthService, VideoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
