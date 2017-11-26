@@ -6,9 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { ReCaptchaModule } from 'angular2-recaptcha';
 
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { AuthService } from './services/auth.service';
 
 const appRoutes: Routes = [
+  { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
 ]
 
@@ -16,6 +19,7 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
     RegisterComponent,
   ],
   imports: [
