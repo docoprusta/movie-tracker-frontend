@@ -1,0 +1,14 @@
+<div class="col-xs-6 col-xs-offset-3">
+  <p>{{video.closeDate}}</p>
+  <p>{{video.duration}}</p>
+  <p>{{video.lastPosition}}</p>
+  <p>{{video.title}}</p>
+
+  <button class="btn btn-info"
+          id="apiKeyButton"
+          (click)="ShowApiKeyClicked()">
+    Show api key
+  </button>
+
+  <label *ngIf="apiKey != ''">{{apiKey}}</label>
+</div>
