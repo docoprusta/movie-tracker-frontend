@@ -3,45 +3,58 @@
         <div class="container-fluid">
 
             <div class="navbar-header">
+                <button type="button"
+                        class="navbar-toggle"
+                        data-toggle="collapse"
+                        data-target="#navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 <a routerLink="/"
                    class="navbar-brand">Movie Tracker</a>
             </div>
+            <div class="collapse navbar-collapse"
+                 id="navbar-collapse-1">
+                <ul *ngIf="!authService.getIsLoggedIn()"
+                    class="nav navbar-nav">
+                    <li>
+                        <a routerLink="/login">Login</a>
+                    </li>
+                    <li>
+                        <a routerLink="/register">Register</a>
+                    </li>
+                </ul>
 
-            <ul *ngIf="!authService.getLoggedIn()"
-                class="nav navbar-nav">
-                <li>
-                    <a routerLink="/login">Login</a>
-                </li>
-                <li>
-                    <a routerLink="/register">Register</a>
-                </li>
-            </ul>
-
-            <ul *ngIf="authService.getLoggedIn()"
-                class="nav navbar-nav navbar-right">
-                <li>
-                    <a routerLink="/videos"></a>
-                </li>
-                <li class="dropdown">
-                    <a href="#"
-                       class="dropdown-toggle"
-                       data-toggle="dropdown"
-                       role="button">Hello {{authService.getLoggedInUserName()}}
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a (click)="logoutClicked()"
-                               role="button">Logout</a>
-                        </li>
-                        <li>
-                            <a (click)="deleteClicked()"
-                               role="button">Delete account</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
+                <ul *ngIf="authService.getIsLoggedIn()"
+                    class="nav navbar-nav navbar-right">
+                    <li>
+                        <a routerLink="/videos">Videos</a>
+                    </li>
+                    <li class="dropdown">
+                        <a role="button"
+                           (click)="apiKeyClicked()">Api key</a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle"
+                           data-toggle="dropdown"
+                           role="button">Hello {{authService.getLoggedInUserName()}}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a (click)="logoutClicked()"
+                                   role="button">Logout</a>
+                            </li>
+                            <li>
+                                <a (click)="deleteClicked()"
+                                   role="button">Delete account</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 </div>

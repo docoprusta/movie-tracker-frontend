@@ -1,14 +1,102 @@
-<div class="col-xs-6 col-xs-offset-3">
-  <p>{{video.closeDate}}</p>
-  <p>{{video.duration}}</p>
-  <p>{{video.lastPosition}}</p>
-  <p>{{video.title}}</p>
+<div class="col-xs-12">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            role="button">
+          image
+        </th>
 
-  <button class="btn btn-info"
-          id="apiKeyButton"
-          (click)="ShowApiKeyClicked()">
-    Show api key
-  </button>
+        <th (click)="closeDateClicked()"
+            scope="col"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            role="button">close date
+          <span class="glyphicon"
+                [ngClass]="{ 'glyphicon-triangle-bottom': closeDateDes, 'glyphicon-triangle-top': closeDateAsc }"></span>
+        </th>
 
-  <label *ngIf="apiKey != ''">{{apiKey}}</label>
+        <th scope="col"
+            (click)="titleClicked()"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            role="button">title
+          <span class="glyphicon"
+                [ngClass]="{ 'glyphicon-triangle-bottom': titleDes, 'glyphicon-triangle-top': titleAsc }"></span>
+        </th>
+
+        <th scope="col"
+            (click)="seasonClicked()"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            role="button">season
+          <span class="glyphicon"
+                [ngClass]="{ 'glyphicon-triangle-bottom': seasonDes, 'glyphicon-triangle-top': seasonAsc }"></span>
+        </th>
+
+        <th scope="col"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            (click)="episodeClicked()"
+            role="button">episode
+          <span class="glyphicon"
+                [ngClass]="{ 'glyphicon-triangle-bottom': episodeDes, 'glyphicon-triangle-top': episodeAsc }"></span>
+        </th>
+
+        <th scope="col"
+            (click)="lastPositionClicked()"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            role="button">last position
+          <span class="glyphicon"
+                [ngClass]="{ 'glyphicon-triangle-bottom': lastPositionDes, 'glyphicon-triangle-top': lastPositionAsc }"></span>
+        </th>
+
+        <th scope="col"
+            (click)="durationClicked()"
+            unselectable="on"
+            onselectstart="return false;"
+            onmousedown="return false;"
+            role="button">duration
+          <span class="glyphicon"
+                [ngClass]="{ 'glyphicon-triangle-bottom': durationDes, 'glyphicon-triangle-top': durationAsc }"></span>
+        </th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let video of videos">
+        <td>
+          <img src="{{video.imageUrl}}"
+               alt="No image available">
+        </td>
+        <td>
+          {{video.closeDate}}
+        </td>
+        <td>
+          {{video.title}}
+        </td>
+        <td>
+          {{video.season}}
+        </td>
+        <td>
+          {{video.episode}}
+        </td>
+        <td>
+          {{video.lastPosition}}
+        </td>
+        <td>
+          {{video.duration}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

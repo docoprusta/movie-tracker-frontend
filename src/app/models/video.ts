@@ -1,8 +1,12 @@
 export class Video {
     constructor(
+        public imageUrl?: string,
         public closeDate?: string,
+        public fullTitle?: string,
         public title?: string,
-        public lastPosition?: number,
-        public duration?: number
+        public season?: string,
+        public episode?: string,
+        public lastPosition?: string,
+        public duration?: string
     ) { }
 }

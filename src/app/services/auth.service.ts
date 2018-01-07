@@ -2,47 +2,51 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { error } from 'util';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router  } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Promise } from 'q';
 
 @Injectable()
-export class AuthService implements CanActivate {
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> | Promise<boolean> {
-    return this.loggedIn;
-  }
-
-  private baseUrl: string = 'http://localhost:5000';
+export class AuthService {
+  
+  private baseUrl: string = 'http://127.0.0.1:5000';
   private jsonHeader: Headers = new Headers({ 'Content-Type': 'application/json' });
 
   private loggedInUsername: string;
-  private loggedIn: boolean;
-  private accessToken: string;
-  private refreshToken: string;
-  private apiKey: string;
-  
+  private isLoggedIn: boolean;
+
   getBaseUrl(): string {
     return this.baseUrl;
   }
 
   getAccessToken(): string {
-    return this.accessToken;
+    return localStorage.getItem('accessToken');
   }
 
   setAccessToken(value: string): void {
-    this.accessToken = value;
+    localStorage.setItem('accessToken', value);
+  }
+  
+  setNewAccessTokenWithRefreshToken() {
+    let url: string = `${this.baseUrl}/refresh-token`;
+    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.getRefreshToken()}` });
+    return this.http.get(url, { headers: authHeader }).toPromise();
+  }
+
+  getRefreshToken(): string {
+    return localStorage.getItem('refreshToken');
   }
 
   setRefreshToken(value: string): void {
-    this.refreshToken = value;
+    localStorage.setItem('refreshToken', value);
   }
 
-  setLoggedIn(value: boolean): void {
-    this.loggedIn = value;
+  setIsLoggedIn(value: boolean): void {
+    this.isLoggedIn = value;
   }
 
-  getLoggedIn(): boolean {
-    return this.loggedIn;
+  getIsLoggedIn(): boolean {
+    return this.isLoggedIn;
   }
 
   getLoggedInUserName(): string {
@@ -53,53 +57,53 @@ export class AuthService implements CanActivate {
     this.loggedInUsername = value;
   }
 
-  setApiKey(): void {
+  sendApiKeyRequest() {
     let url: string = `${this.baseUrl}/api-key`;
-    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.accessToken}` });
+    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.getAccessToken()}` });
+    return this.http.get(url, { headers: authHeader }).toPromise();
+  }
 
-    this.http.get(url, { headers: authHeader }).toPromise()
+  setApiKey(): void {
+    this.sendApiKeyRequest()
       .then((response) => {
         let responseDict = JSON.parse(response.text())
-        this.apiKey = responseDict.apiKey;
+        localStorage.setItem('apiKey', responseDict.apiKey);
       })
       .catch((response) => {
-        let responseDict = JSON.parse(response.text())
-        this.apiKey = responseDict.apiKey;
+        
       })
   }
 
   getApiKey(): string {
-    console.log(this.apiKey);
-    return this.apiKey;
+    return localStorage.getItem('apiKey');
   }
 
   constructor(private http: Http, private router: Router) { }
 
-  login(user): Promise<any> {
+  login(user) {
     let url: string = `${this.baseUrl}/login`;
     return this.http.post(url, user, { headers: this.jsonHeader }).toPromise();
   }
 
-  logoutAccess(): Promise<any> {
-    console.log(this.accessToken);
-    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.accessToken}` });
+  logoutAccess() {
+    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.getAccessToken()}` });
     let url: string = `${this.baseUrl}/logout-access`;
     return this.http.delete(url, { headers: authHeader }).toPromise();
   }
 
-  logoutRefresh(): Promise<any> {
-    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.refreshToken}` });
+  logoutRefresh() {
+    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.getRefreshToken()}` });
     let url: string = `${this.baseUrl}/logout-refresh`;
-    return this.http.delete(url, { headers: authHeader}).toPromise();
+    return this.http.delete(url, { headers: authHeader }).toPromise();
   }
 
-  deletAccount(): Promise<any> {
-    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.accessToken}` });
+  deletAccount() {
+    const authHeader: Headers = new Headers({ 'Authorization': `Bearer ${this.getAccessToken()}` });
     let url: string = `${this.baseUrl}/account`;
-    return this.http.delete(url, { headers: authHeader}).toPromise();
+    return this.http.delete(url, { headers: authHeader }).toPromise();
   }
 
-  register(user): Promise<any> {
+  register(user) {
     let url: string = `${this.baseUrl}/register`;
     return this.http.post(url, user, { headers: this.jsonHeader }).toPromise();
   }

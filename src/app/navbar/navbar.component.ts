@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { Clipboard } from 'ts-clipboard';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { JwtHelper } from 'angular2-jwt';
 
 
 @Component({
@@ -10,29 +13,59 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  private apiKey: string;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(public authService: AuthService,
+    private router: Router,
+    public toastr: ToastsManager,
+    vcr: ViewContainerRef) {
+      this.toastr.setRootViewContainerRef(vcr);
+  }
 
   ngOnInit() {
+    const jwtHelper = new JwtHelper();
+    const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
+    this.authService.setLoggedInUserName(decodedToken.identity);
+    console.log('asdsad')
+    console.log(0, this.authService.getAccessToken());
+    this.authService.sendApiKeyRequest()
+      .then((response) => {
+        this.authService.setIsLoggedIn(true);
+        console.log(1, this.authService.getAccessToken());
+      })
+      .catch((response) => {
+        console.log(2, this.authService.getAccessToken());
+        this.authService.setNewAccessTokenWithRefreshToken()
+          .then((response) => {
+            let responseDict = JSON.parse(response.text());
+            this.authService.setAccessToken(responseDict.accessToken);
+            console.log(3, this.authService.getAccessToken());
+            this.authService.setIsLoggedIn(true);
+          })
+          .catch((response) => {
+            console.log(4, this.authService.getAccessToken());
+            // this.authService.setIsLoggedIn(false);
+          })
+      })
   }
 
   logout() {
     this.authService.logoutAccess()
-    .then((response) => {
-      this.authService.setLoggedIn(false);
-      this.authService.setAccessToken("");
-    })
-    .catch((response) => {
+      .then((response) => {
+        this.authService.setIsLoggedIn(false);
+        this.authService.setAccessToken("");
+      })
+      .catch((response) => {
 
-    })
+      })
 
     this.authService.logoutRefresh()
-    .then((response) => {
-      this.authService.setRefreshToken("");
-    })
-    .catch((response) => {
+      .then((response) => {
+        this.authService.setRefreshToken("");
+      })
+      .catch((response) => {
 
-    })
+      })
   }
 
   logoutClicked() {
@@ -42,14 +75,24 @@ export class NavbarComponent implements OnInit {
 
   deleteClicked() {
     this.authService.deletAccount()
-    .then((response) => {
-      
-    })
-    .catch((response) => {
+      .then((response) => {
 
-    })    
+      })
+      .catch((response) => {
+
+      })
     this.logout();
     this.router.navigateByUrl('/');
+  }
+
+  showSuccess() {
+    this.toastr.success('Api key has been copied to the clipboard!', 'Success!');
+  }
+
+  apiKeyClicked() {
+    this.apiKey = this.authService.getApiKey();
+    Clipboard.copy(this.apiKey);
+    this.showSuccess();
   }
 
 }

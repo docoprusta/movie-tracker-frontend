@@ -24,13 +24,13 @@ export class LoginComponent implements OnInit {
   sendLoginRequest(): void {
     this.auth.login(this.user)
     .then((response) => {
-      this.auth.setLoggedIn(true);
       let responseDict = JSON.parse(response.text())
       this.auth.setAccessToken(responseDict.accessToken);
       this.auth.setRefreshToken(responseDict.refreshToken);
       this.auth.setApiKey();
       this.auth.setLoggedInUserName(this.user.username);
       this.router.navigateByUrl('/videos');
+      this.auth.setIsLoggedIn(true);
     })
     .catch((response) => {
       if (response.status === 401) {
