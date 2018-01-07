@@ -1,6 +1,9 @@
 {
   "name": "movie-tracker-frontend",
   "version": "0.0.0",
+  "engines": {
+    "node": "7.10.0"
+  },
   "license": "MIT",
   "scripts": {
     "ng": "ng",
