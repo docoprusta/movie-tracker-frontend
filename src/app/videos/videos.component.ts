@@ -30,7 +30,7 @@ export class VideosComponent implements OnInit {
   public durationAsc: boolean;
   public durationDes: boolean;
 
-  constructor(private authService: AuthService, private videoService: VideoService, private router: Router) {}
+  constructor(private authService: AuthService, private videoService: VideoService, private router: Router) { }
 
   minTwoDigits(n): string {
     return (n < 10 ? '0' : '') + n;
@@ -73,105 +73,108 @@ export class VideosComponent implements OnInit {
   subscribeForVideos() {
     const jwtHelper = new JwtHelper();
     const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
-    
+
     this.videosSubscription = this.videoService.getVideos()
-    .subscribe((response) => {
+      .subscribe((response) => {
 
-      const jwtHelper = new JwtHelper();
-      const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
-      if ((decodedToken.exp - Math.round(+Date.now()/1000)) <= 5) {
-        this.authService.setNewAccessTokenWithRefreshToken()
-        .then((response) => {
-          let responseDict = JSON.parse(response.text());
-          this.authService.setAccessToken(responseDict.accessToken);
-          this.authService.setIsLoggedIn(true);
+        const jwtHelper = new JwtHelper();
+        const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
+        if ((decodedToken.exp - Math.round(+Date.now() / 1000)) <= 5) {
+          this.authService.setNewAccessTokenWithRefreshToken()
+            .then((response) => {
+              let responseDict = JSON.parse(response.text());
+              this.authService.setAccessToken(responseDict.accessToken);
+              this.authService.setIsLoggedIn(true);
+            })
+            .catch((response) => {
+              // this.authService.setIsLoggedIn(false);
+            })
+        }
+        const responseDict = JSON.parse(response.text());
+
+        let videos: Video[] = [];
+
+        for (var i = 0; i < responseDict.length; i++) {
+          let newVideo = new Video();
+          newVideo.imageUrl = responseDict[i].imageUrl;
+          newVideo.closeDate = responseDict[i].closeDate;
+          newVideo.duration = this.secondsToTimeString(responseDict[i].duration);
+          newVideo.lastPosition = this.secondsToTimeString(responseDict[i].lastPosition);
+          newVideo.fullTitle = responseDict[i].title;
+          const parsedTitle = TitleParser(responseDict[i].title);
+          newVideo.title = parsedTitle.title;
+          newVideo.season = parsedTitle.season;
+          newVideo.episode = parsedTitle.episode;
+
+          videos.push(newVideo);
+        }
+
+        let thisVideosCopy = this.videos.map(x => Object.assign({}, x));
+        let videosCopy = videos.map(x => Object.assign({}, x));
+        thisVideosCopy.sort((x, y) => {
+          if (x.closeDate < y.closeDate) {
+            return -1;
+          }
+          if (x.closeDate > y.closeDate) {
+            return 1;
+          }
+          return 0;
         })
-        .catch((response) => {
-          // this.authService.setIsLoggedIn(false);
+        videosCopy.sort((x, y) => {
+          if (x.closeDate < y.closeDate) {
+            return -1;
+          }
+          if (x.closeDate > y.closeDate) {
+            return 1;
+          }
+          return 0;
         })
-      }
-      const responseDict = JSON.parse(response.text());
 
-      let videos: Video[] = [];
-
-      for (var i = 0; i < responseDict.length; i++) {
-        let newVideo = new Video();
-        newVideo.imageUrl = responseDict[i].imageUrl;
-        newVideo.closeDate = responseDict[i].closeDate;
-        newVideo.duration = this.secondsToTimeString(responseDict[i].duration);
-        newVideo.lastPosition = this.secondsToTimeString(responseDict[i].lastPosition);
-        newVideo.fullTitle = responseDict[i].title;
-        const parsedTitle = TitleParser(responseDict[i].title);
-        newVideo.title = parsedTitle.title;
-        newVideo.season = parsedTitle.season;
-        newVideo.episode = parsedTitle.episode;
-
-        videos.push(newVideo);
-      }
-
-      let thisVideosCopy = this.videos.map(x => Object.assign({}, x));
-      let videosCopy = videos.map(x => Object.assign({}, x));
-      thisVideosCopy.sort((x, y) => {
-        if (x.closeDate < y.closeDate) {
-          return -1;
+        if (JSON.stringify(thisVideosCopy) !== JSON.stringify(videosCopy)) {
+          this.videos = videos;
+          this.sortBySelected();
         }
-        if (x.closeDate > y.closeDate) {
-          return 1;
-        }
-        return 0;
       })
-      videosCopy.sort((x, y) => {
-        if (x.closeDate < y.closeDate) {
-          return -1;
-        }
-        if (x.closeDate > y.closeDate) {
-          return 1;
-        }
-        return 0;
-      })
-
-      if (JSON.stringify(thisVideosCopy) !== JSON.stringify(videosCopy)) {
-        this.videos = videos;
-        this.sortBySelected();
-      }
-    })
   }
 
   ngOnInit() {
-    const jwtHelper = new JwtHelper();
-    const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
-    this.authService.setLoggedInUserName(decodedToken.identity);
-    if ((decodedToken.exp - Math.round(+Date.now()/1000)) <= 5) {
-      this.authService.setNewAccessTokenWithRefreshToken()
-      .then((response) => {
-        let responseDict = JSON.parse(response.text())
-        this.authService.setAccessToken(responseDict.accessToken);
-        this.authService.setIsLoggedIn(true);
-      })
-      .catch((response) => {
-        // this.authService.setIsLoggedIn(false);
-      })
-    }
 
-    this.authService.sendApiKeyRequest()
-    .then((response) => {
-      this.authService.setIsLoggedIn(true);
-      this.initVideos();
-      this.subscribeForVideos();
-    })
-    .catch((response) => {
-      this.authService.setNewAccessTokenWithRefreshToken()
-      .then((response) => {
-        let responseDict = JSON.parse(response.text())
-        this.authService.setAccessToken(responseDict.accessToken);
-        this.authService.setIsLoggedIn(true);
-        this.initVideos();
-        this.subscribeForVideos();
-      })
-      .catch((response) => {
-        // this.authService.setIsLoggedIn(false);
-      })
-    })
+    if (this.authService.getAccessToken() != null) {
+      const jwtHelper = new JwtHelper();
+      const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
+      this.authService.setLoggedInUserName(decodedToken.identity);
+      if ((decodedToken.exp - Math.round(+Date.now() / 1000)) <= 5) {
+        this.authService.setNewAccessTokenWithRefreshToken()
+          .then((response) => {
+            let responseDict = JSON.parse(response.text())
+            this.authService.setAccessToken(responseDict.accessToken);
+            this.authService.setIsLoggedIn(true);
+          })
+          .catch((response) => {
+            // this.authService.setIsLoggedIn(false);
+          })
+      }
+
+      this.authService.sendApiKeyRequest()
+        .then((response) => {
+          this.authService.setIsLoggedIn(true);
+          this.initVideos();
+          this.subscribeForVideos();
+        })
+        .catch((response) => {
+          this.authService.setNewAccessTokenWithRefreshToken()
+            .then((response) => {
+              let responseDict = JSON.parse(response.text())
+              this.authService.setAccessToken(responseDict.accessToken);
+              this.authService.setIsLoggedIn(true);
+              this.initVideos();
+              this.subscribeForVideos();
+            })
+            .catch((response) => {
+              // this.authService.setIsLoggedIn(false);
+            })
+        })
+    }
   }
 
   ngOnDestroy() {
@@ -185,7 +188,7 @@ export class VideosComponent implements OnInit {
       this.sortByDateDes();
     }
     else if (this.closeDateDes) {
-       this.sortByDateAsc();
+      this.sortByDateAsc();
     } else {
       this.sortByDateAsc();
     }
@@ -197,7 +200,7 @@ export class VideosComponent implements OnInit {
       this.sortBySeasonDes();
     }
     else if (this.seasonDes) {
-       this.sortBySeasonAsc();
+      this.sortBySeasonAsc();
     } else {
       this.sortBySeasonAsc();
     }
@@ -209,7 +212,7 @@ export class VideosComponent implements OnInit {
       this.sortByEpisodeDes();
     }
     else if (this.episodeDes) {
-       this.sortByEpisodeAsc();
+      this.sortByEpisodeAsc();
     } else {
       this.sortByEpisodeAsc();
     }
@@ -220,13 +223,13 @@ export class VideosComponent implements OnInit {
   titleClicked() {
     if (this.titleAsc) {
       this.sortByTitleDes();
-    } 
+    }
     else if (this.titleDes) {
       this.sortByTitleAsc();
     } else {
       this.sortByTitleAsc();
     }
-    this.setEveryOtherSortingBooleanToFalse("title");    
+    this.setEveryOtherSortingBooleanToFalse("title");
   }
 
   lastPositionClicked() {
@@ -237,7 +240,7 @@ export class VideosComponent implements OnInit {
     } else {
       this.sortByLastPostitionAsc();
     }
-    this.setEveryOtherSortingBooleanToFalse("lastPosition");        
+    this.setEveryOtherSortingBooleanToFalse("lastPosition");
   }
 
   durationClicked() {
@@ -248,7 +251,7 @@ export class VideosComponent implements OnInit {
     } else {
       this.sortByDurationAsc();
     }
-    this.setEveryOtherSortingBooleanToFalse("duration");        
+    this.setEveryOtherSortingBooleanToFalse("duration");
   }
 
   sortByDateAsc() {
@@ -423,7 +426,7 @@ export class VideosComponent implements OnInit {
     if (this.closeDateAsc) {
       this.sortByDateAsc();
     } else if (this.closeDateDes) {
-      this.sortByDateDes();      
+      this.sortByDateDes();
     } else if (this.titleAsc) {
       this.sortByTitleAsc();
     } else if (this.titleDes) {

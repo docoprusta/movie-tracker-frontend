@@ -19,28 +19,30 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     public toastr: ToastsManager,
     vcr: ViewContainerRef) {
-      this.toastr.setRootViewContainerRef(vcr);
+    this.toastr.setRootViewContainerRef(vcr);
   }
 
   ngOnInit() {
-    const jwtHelper = new JwtHelper();
-    const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
-    this.authService.setLoggedInUserName(decodedToken.identity);
-    this.authService.sendApiKeyRequest()
-      .then((response) => {
-        this.authService.setIsLoggedIn(true);
-      })
-      .catch((response) => {
-        this.authService.setNewAccessTokenWithRefreshToken()
-          .then((response) => {
-            let responseDict = JSON.parse(response.text());
-            this.authService.setAccessToken(responseDict.accessToken);
-            this.authService.setIsLoggedIn(true);
-          })
-          .catch((response) => {
-            // this.authService.setIsLoggedIn(false);
-          })
-      })
+    if (this.authService.getAccessToken() != null) {
+      const jwtHelper = new JwtHelper();
+      const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
+      this.authService.setLoggedInUserName(decodedToken.identity);
+      this.authService.sendApiKeyRequest()
+        .then((response) => {
+          this.authService.setIsLoggedIn(true);
+        })
+        .catch((response) => {
+          this.authService.setNewAccessTokenWithRefreshToken()
+            .then((response) => {
+              let responseDict = JSON.parse(response.text());
+              this.authService.setAccessToken(responseDict.accessToken);
+              this.authService.setIsLoggedIn(true);
+            })
+            .catch((response) => {
+              // this.authService.setIsLoggedIn(false);
+            })
+        })
+    }
   }
 
   logout() {

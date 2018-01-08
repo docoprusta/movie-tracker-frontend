@@ -9,7 +9,7 @@ import { Promise } from 'q';
 @Injectable()
 export class AuthService {
   
-  private baseUrl: string = 'http://127.0.0.1:5000';
+  private baseUrl: string = 'https://movie-tracker-backend.herokuapp.com';
   private jsonHeader: Headers = new Headers({ 'Content-Type': 'application/json' });
 
   private loggedInUsername: string;
