@@ -26,24 +26,18 @@ export class NavbarComponent implements OnInit {
     const jwtHelper = new JwtHelper();
     const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
     this.authService.setLoggedInUserName(decodedToken.identity);
-    console.log('asdsad')
-    console.log(0, this.authService.getAccessToken());
     this.authService.sendApiKeyRequest()
       .then((response) => {
         this.authService.setIsLoggedIn(true);
-        console.log(1, this.authService.getAccessToken());
       })
       .catch((response) => {
-        console.log(2, this.authService.getAccessToken());
         this.authService.setNewAccessTokenWithRefreshToken()
           .then((response) => {
             let responseDict = JSON.parse(response.text());
             this.authService.setAccessToken(responseDict.accessToken);
-            console.log(3, this.authService.getAccessToken());
             this.authService.setIsLoggedIn(true);
           })
           .catch((response) => {
-            console.log(4, this.authService.getAccessToken());
             // this.authService.setIsLoggedIn(false);
           })
       })
@@ -91,6 +85,7 @@ export class NavbarComponent implements OnInit {
 
   apiKeyClicked() {
     this.apiKey = this.authService.getApiKey();
+
     Clipboard.copy(this.apiKey);
     this.showSuccess();
   }
