@@ -45,7 +45,7 @@ const appRoutes: Routes = [
     HttpModule,
     FormsModule,
     ReCaptchaModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes, { useHash: true })
   ],
   providers: [AuthService, VideoService],
   bootstrap: [AppComponent]

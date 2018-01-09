@@ -52,15 +52,16 @@ export class NavbarComponent implements OnInit {
         this.authService.setAccessToken("");
       })
       .catch((response) => {
-
+        this.authService.setIsLoggedIn(false);
       })
 
     this.authService.logoutRefresh()
       .then((response) => {
+        this.authService.setIsLoggedIn(false);
         this.authService.setRefreshToken("");
       })
       .catch((response) => {
-
+        this.authService.setIsLoggedIn(false);
       })
   }
 
