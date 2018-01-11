@@ -1,4 +1,9 @@
-img {
+.img-small {
     width: 100px;
     height: 100px;
+}
+
+.img-big {
+    width: 400px;
+    height: 400px;
 }

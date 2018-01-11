@@ -1,3 +1,175 @@
 <div class="col-xs-6 col-xs-offset-3">
   <h1>Welcome to movie tracker!</h1>
+  <div>
+    <h2>What is this app?</h2>
+    <p>You can use this app for tracking your movies, series and other video files played with vlc player.
+    </p>
+    <p> You can see the close date, the title, the season and the episode numbers (if it is an episode of a series), the last
+      position of the file and the files' duration.
+    </p>
+  </div>
+
+  <div>
+    <h2>How to use this app?</h2>
+    <ol>
+      <li *ngIf="!authService.getIsLoggedIn()">
+        If you are not registered
+        <a routerLink="register">Register</a>, then
+        <a routerLink="login">Login</a>
+      </li>
+
+      <div *ngIf="authService.getIsLoggedIn()">
+        <li>
+          <p>Create a
+            <strong>config.txt</strong> file with the following content:</p>
+          <pre>http://movie-tracker-backend.herokuapp.com/videos
+{{authService.getApiKey()}}
+          </pre>
+        </li>
+        <li>Download the
+          <a href="https://pastebin.com/dl/0Awn22Xs">Lua extension for vlc</a>
+        </li>
+        <li>
+          <p>Choose an os:</p>
+          <div class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse"
+                     href="#collapse1">Windows</a>
+                </h4>
+              </div>
+              <div id="collapse1"
+                   class="panel-collapse collapse">
+                <div class="panel-body">
+                  <ol>
+                    <li>
+                      <p>
+                        <strong>Install curl</strong>
+                      </p>
+                      <p>Download the installer from
+                        <a target="_blank"
+                           href="http://www.confusedbycode.com/curl/#downloads">here</a> and install it</p>
+                    </li>
+                    <li>
+                      <p>Paste
+                        <strong>config.txt</strong> and
+                        <strong>0Awn22Xs.lua</strong> to</p>
+                      <p>
+                        <u>For all users</u>
+                      </p>
+                      <pre>&lt;VLC_INSTALLATION_FOLDER&gt;\lua\extensions</pre>
+                      <p>
+                        example
+                      </p>
+                      <pre>C:\Program Files\VideoLAN\VLC\lua\extensions</pre>
+                      <p>
+                        <u>For current user</u>
+                      </p>
+                      <pre>%APPDATA%\vlc\lua\extensions\</pre>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse"
+                     href="#collapse2">Linux</a>
+                </h4>
+              </div>
+              <div id="collapse2"
+                   class="panel-collapse collapse">
+                <div class="panel-body">
+                  <ol>
+                    <li>
+                      <p>
+                        <strong>Install curl</strong>
+                      </p>
+                      <p>A few linux distros are shipped with curl so check it with
+                      </p>
+                      <pre>curl --version</pre>
+                      <p>Install for debian based distros</p>
+                      <pre>sudo apt install -y curl</pre>
+                      <p>or</p>
+                      <pre>sudo apt-get install -y curl</pre>
+                      <p>If you use a different linux distro check it on the package manager</p>
+                      <p>Alternatively you can find the binary
+                        <a target="_blank"
+                           href="https://curl.haxx.se/download.html">here</a>
+                      </p>
+                    </li>
+                    <li>
+                      <p>Paste
+                        <strong>config.txt</strong> and
+                        <strong>0Awn22Xs.lua</strong> to</p>
+                      <p>
+                        <p>
+                          <u>For all users</u>
+                        </p>
+                        <pre>/usr/lib/vlc/lua/playlist/</pre>
+                        <p>
+                          <strong>or</strong>
+                        </p>
+                        <pre>/usr/share/vlc/lua/extensions/</pre>
+                        <p>
+                          <u>For current user</u>
+                        </p>
+                        <pre>~/.local/share/vlc/lua/extensions/</pre>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse"
+                     href="#collapse3">MacOS</a>
+                </h4>
+              </div>
+              <div id="collapse3"
+                   class="panel-collapse collapse">
+                <div class="panel-body">
+                  <p class="warning">I have not tested it in MacOs!</p>
+                  <ol>
+                    <li>
+                      <p>
+                        <strong>Install curl</strong>
+                      </p>
+                      <p>
+                        <a target="_blank"
+                           href="http://macappstore.org/curl/">Installation guide</a>
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        <u>For all users</u>
+                      </p>
+                      <pre>/Applications/VLC.app/Contents/MacOS/share/lua/extensions/</pre>
+                      <p>
+                        <u>For current user</u>
+                      </p>
+                      <pre>/Users/%your_name%/Library/Application Support/org.videolan.vlc/lua/extensions/</pre>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <p>Open a video file with vlc</p>
+        </li>
+        <li>
+          <p>If you want to send data to the server and quit:</p>
+          <p>VLC Menu --> View --> Send data to the server and quit</p>
+          <p>After that you can check your videos if you the videos menu on the navbar</p>
+        </li>
+      </div>
+    </ol>
+  </div>
 </div>

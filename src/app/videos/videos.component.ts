@@ -87,7 +87,7 @@ export class VideosComponent implements OnInit {
               this.authService.setIsLoggedIn(true);
             })
             .catch((response) => {
-              // this.authService.setIsLoggedIn(false);
+              this.authService.setIsLoggedIn(false);
             })
         }
         const responseDict = JSON.parse(response.text());
@@ -151,7 +151,7 @@ export class VideosComponent implements OnInit {
             this.authService.setIsLoggedIn(true);
           })
           .catch((response) => {
-            // this.authService.setIsLoggedIn(false);
+            this.authService.setIsLoggedIn(false);
           })
       }
 
@@ -171,7 +171,7 @@ export class VideosComponent implements OnInit {
               this.subscribeForVideos();
             })
             .catch((response) => {
-              // this.authService.setIsLoggedIn(false);
+              this.authService.setIsLoggedIn(false);
             })
         })
     }

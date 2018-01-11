@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.authService.getAccessToken() != null) {
+    if (this.authService.getAccessToken() != null && this.authService.getAccessToken() != "") {
       const jwtHelper = new JwtHelper();
       const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());
       this.authService.setLoggedInUserName(decodedToken.identity);
@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
               this.authService.setIsLoggedIn(true);
             })
             .catch((response) => {
-              // this.authService.setIsLoggedIn(false);
+              this.authService.setIsLoggedIn(false);
             })
         })
     }
@@ -63,7 +63,7 @@ export class NavbarComponent implements OnInit {
       .catch((response) => {
         this.authService.setIsLoggedIn(false);
       })
-  }
+    }
 
   logoutClicked() {
     this.logout();

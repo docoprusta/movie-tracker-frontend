@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { CanActivate } from '@angular/router/src/interfaces';
 import { Observable } from 'rxjs/Observable';
+import { Clipboard } from 'ts-clipboard';
 
 @Component({
   selector: 'app-homepage',
@@ -11,9 +12,16 @@ import { Observable } from 'rxjs/Observable';
 })
 export class HomepageComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  public apiKey: string;
+
+  constructor(public authService: AuthService, private router: Router) { }
 
   private isDataAvailable: boolean;
 
   ngOnInit() {}
+
+  apiKeyClicked() {
+    this.apiKey = this.authService.getApiKey();
+    Clipboard.copy(this.apiKey);
+  }
 }

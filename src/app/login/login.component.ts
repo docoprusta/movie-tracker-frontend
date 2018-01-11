@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
       this.auth.setRefreshToken(responseDict.refreshToken);
       this.auth.setApiKey();
       this.auth.setLoggedInUserName(this.user.username);
-      this.router.navigateByUrl('/videos');
+      this.router.navigateByUrl('/');
       this.auth.setIsLoggedIn(true);
     })
     .catch((response) => {
