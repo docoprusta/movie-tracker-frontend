@@ -11,17 +11,9 @@ import { Clipboard } from 'ts-clipboard';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
-
-  public apiKey: string;
-
   constructor(public authService: AuthService, private router: Router) { }
 
   private isDataAvailable: boolean;
 
   ngOnInit() {}
-
-  apiKeyClicked() {
-    this.apiKey = this.authService.getApiKey();
-    Clipboard.copy(this.apiKey);
-  }
 }
