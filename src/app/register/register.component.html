@@ -9,13 +9,18 @@
           <input type="text"
                  class="form-control"
                  id="username"
+                 pattern="[a-zA-Z0-9]{4,}"
                  placeholder="enter username:"
                  [(ngModel)]="user.username"
                  #username="ngModel"
                  name="username"
                  required>
           <span class="help-block"
-                *ngIf="!username.valid && (username.touched)">Please enter a valid username!</span>
+                *ngIf="!username.valid && (username.touched)">
+                Please enter a valid username! <br>
+                Username can contains only letters from english alphabet and numbers <br>
+                Username should be at least 8 character length
+          </span>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -26,9 +31,14 @@
                  [(ngModel)]="user.password"
                  name="password"
                  #password="ngModel"
+                 pattern="[a-zA-Z0-9~#?!@$%^&*-]{8,}"
                  required>
           <span class="help-block"
-                *ngIf="!password.valid && password.touched">Please enter a valid password!</span>
+                *ngIf="!password.valid && password.touched">
+                Please enter a valid password! <br>
+                Password can contains only letters from english alphabet and numbers and ~#?!@$%^&*- characters <br>
+                Password should be at least 8 character length
+          </span>
           <span class="help-block"
                 *ngIf="!password.valid"></span>
         </div>
@@ -40,8 +50,10 @@
         <button [disabled]="!registerForm.form.valid"
                 type="submit"
                 class="btn btn-default">Submit</button>
-        <span *ngIf="userAlreadyExists" class="help-block">User Already exists</span>
-        <span *ngIf="fatalError" class="help-block">Fatal error</span>
+        <span *ngIf="userAlreadyExists"
+              class="help-block">User Already exists</span>
+        <span *ngIf="fatalError"
+              class="help-block">Fatal error</span>
       </form>
     </div>
   </div>
