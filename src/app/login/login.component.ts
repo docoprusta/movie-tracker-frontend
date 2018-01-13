@@ -5,6 +5,7 @@ import { ViewChild } from '@angular/core';
 import { ReCaptchaComponent } from 'angular2-recaptcha';
 import { Form } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,11 @@ export class LoginComponent implements OnInit {
   authError: boolean;
   fatalError: boolean;
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private spinnerService: Ng4LoadingSpinnerService
+  ) { }
 
   @ViewChild(ReCaptchaComponent) captcha: ReCaptchaComponent;
 
@@ -31,8 +36,10 @@ export class LoginComponent implements OnInit {
       this.auth.setLoggedInUserName(this.user.username);
       this.router.navigateByUrl('/');
       this.auth.setIsLoggedIn(true);
+      this.spinnerService.hide();
     })
     .catch((response) => {
+      this.spinnerService.hide();
       if (response.status === 401) {
         this.authError = true;
       } else {
@@ -52,6 +59,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
+    this.spinnerService.show();
     this.captcha.reset();
     this.captcha.execute();
   }

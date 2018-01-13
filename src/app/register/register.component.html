@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="col-xs-6 col-xs-offset-3">
+  <div class="col-xs-12 col-md-6 col-md-offset-3">
     <div class="row">
       <h1>Register</h1>
       <form #registerForm="ngForm"
@@ -19,7 +19,7 @@
                 *ngIf="!username.valid && (username.touched)">
                 Please enter a valid username! <br>
                 Username can contains only letters from english alphabet and numbers <br>
-                Username should be at least 8 character length
+                Username must be at least 4 characters
           </span>
         </div>
         <div class="form-group">
@@ -37,7 +37,7 @@
                 *ngIf="!password.valid && password.touched">
                 Please enter a valid password! <br>
                 Password can contains only letters from english alphabet and numbers and ~#?!@$%^&*- characters <br>
-                Password should be at least 8 character length
+                Password should be at least 8 characters
           </span>
           <span class="help-block"
                 *ngIf="!password.valid"></span>
@@ -45,7 +45,7 @@
         <div class="form-group">
           <re-captcha size="invisible"
                       (captchaResponse)="onCaptchaResponse()"
-                      site_key="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></re-captcha>
+                      site_key="6LchkkAUAAAAANuL-2fWqT6MXTtw3wUkeT5sr8Za"></re-captcha>
         </div>
         <button [disabled]="!registerForm.form.valid"
                 type="submit"

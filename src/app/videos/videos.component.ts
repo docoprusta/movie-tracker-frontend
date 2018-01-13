@@ -7,6 +7,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { Router } from '@angular/router';
 import * as TitleParser from 'parse-torrent-name';
 import { JwtHelper } from 'angular2-jwt';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
   selector: 'app-videos',
@@ -30,7 +31,12 @@ export class VideosComponent implements OnInit {
   public durationAsc: boolean;
   public durationDes: boolean;
 
-  constructor(private authService: AuthService, private videoService: VideoService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private videoService: VideoService,
+    private router: Router,
+    private spinnerService: Ng4LoadingSpinnerService
+  ) { }
 
   minTwoDigits(n): string {
     return (n < 10 ? '0' : '') + n;
@@ -45,7 +51,17 @@ export class VideosComponent implements OnInit {
     return `${this.minTwoDigits(hours)}:${this.minTwoDigits(minutes)}:${this.minTwoDigits(seconds)}`;
   }
 
+  formatCloseDate(closeDateStr: string) {
+    let options = {
+      year: "numeric", month: "short",  
+      day: "numeric", hour: "2-digit", minute: "2-digit"  
+    }
+    let closeDate = new Date(closeDateStr);
+    return closeDate.toLocaleString("en-us", options);
+  }
+
   initVideos() {
+    this.spinnerService.show();
     this.videoService.initVideos().subscribe((response) => {
       const responseDict = JSON.parse(response.text());
 
@@ -54,7 +70,7 @@ export class VideosComponent implements OnInit {
       for (var i = 0; i < responseDict.length; i++) {
         let newVideo = new Video();
         newVideo.imageUrl = responseDict[i].imageUrl;
-        newVideo.closeDate = responseDict[i].closeDate;
+        newVideo.closeDate = this.formatCloseDate(responseDict[i].closeDate);
         newVideo.duration = this.secondsToTimeString(responseDict[i].duration);
         newVideo.lastPosition = this.secondsToTimeString(responseDict[i].lastPosition);
         newVideo.fullTitle = responseDict[i].title;
@@ -67,6 +83,7 @@ export class VideosComponent implements OnInit {
       }
 
       this.videos = videos;
+      this.spinnerService.hide();
     })
   }
 
@@ -97,7 +114,7 @@ export class VideosComponent implements OnInit {
         for (var i = 0; i < responseDict.length; i++) {
           let newVideo = new Video();
           newVideo.imageUrl = responseDict[i].imageUrl;
-          newVideo.closeDate = responseDict[i].closeDate;
+          newVideo.closeDate = this.formatCloseDate(responseDict[i].closeDate);;
           newVideo.duration = this.secondsToTimeString(responseDict[i].duration);
           newVideo.lastPosition = this.secondsToTimeString(responseDict[i].lastPosition);
           newVideo.fullTitle = responseDict[i].title;
@@ -138,7 +155,6 @@ export class VideosComponent implements OnInit {
   }
 
   ngOnInit() {
-
     if (this.authService.getAccessToken() != null) {
       const jwtHelper = new JwtHelper();
       const decodedToken = jwtHelper.decodeToken(this.authService.getAccessToken());

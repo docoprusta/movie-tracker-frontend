@@ -32,6 +32,7 @@
     "core-js": "^2.4.1",
     "express": "^4.16.2",
     "ng2-google-recaptcha": "^1.2.0",
+    "ng4-loading-spinner": "^1.1.1",
     "parse-torrent-name": "^0.5.4",
     "rxjs": "^5.5.2",
     "ts-clipboard": "^1.0.15",
