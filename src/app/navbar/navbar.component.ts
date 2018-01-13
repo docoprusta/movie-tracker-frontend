@@ -3,7 +3,6 @@ import { AuthService } from '../services/auth.service';
 import { ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Clipboard } from 'ts-clipboard';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { JwtHelper } from 'angular2-jwt';
 
 
@@ -13,13 +12,8 @@ import { JwtHelper } from 'angular2-jwt';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  private apiKey: string;
-
   constructor(public authService: AuthService,
-    private router: Router,
-    public toastr: ToastsManager,
-    vcr: ViewContainerRef) {
-    this.toastr.setRootViewContainerRef(vcr);
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -81,16 +75,4 @@ export class NavbarComponent implements OnInit {
     this.logout();
     this.router.navigateByUrl('/');
   }
-
-  showSuccess() {
-    this.toastr.success('Api key has been copied to the clipboard!', 'Success!');
-  }
-
-  apiKeyClicked() {
-    this.apiKey = this.authService.getApiKey();
-
-    Clipboard.copy(this.apiKey);
-    this.showSuccess();
-  }
-
 }

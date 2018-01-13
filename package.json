@@ -16,11 +16,10 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/cli": "^1.6.0",
-    "@angular/compiler-cli": "^5.0.0",
     "@angular/animations": "^5.0.0",
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
+    "@angular/compiler-cli": "^5.0.0",
     "@angular/core": "^5.0.0",
     "@angular/forms": "^5.0.0",
     "@angular/http": "^5.0.0",
@@ -33,7 +32,6 @@
     "core-js": "^2.4.1",
     "express": "^4.16.2",
     "ng2-google-recaptcha": "^1.2.0",
-    "ng2-toastr": "^4.1.2",
     "parse-torrent-name": "^0.5.4",
     "rxjs": "^5.5.2",
     "ts-clipboard": "^1.0.15",
@@ -42,6 +40,7 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
+    "@angular/cli": "^1.6.4",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
